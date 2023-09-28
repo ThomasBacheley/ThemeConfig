@@ -17,46 +17,52 @@
  */
 
 /**
- * \file    themeconfig/admin/about.php
+ * \file    themeconfig/admin/setup.php
  * \ingroup themeconfig
- * \brief   About page of module ThemeConfig.
+ * \brief   ThemeConfig setup page.
  */
 
 // Load Dolibarr environment
 $res = 0;
 // Try main.inc.php into web root known defined into CONTEXT_DOCUMENT_ROOT (not always defined)
 if (!$res && !empty($_SERVER["CONTEXT_DOCUMENT_ROOT"])) {
-	$res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"]."/main.inc.php";
+    $res = @include $_SERVER["CONTEXT_DOCUMENT_ROOT"] . "/main.inc.php";
 }
 // Try main.inc.php into web root detected using web root calculated from SCRIPT_FILENAME
-$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME']; $tmp2 = realpath(__FILE__); $i = strlen($tmp) - 1; $j = strlen($tmp2) - 1;
+$tmp = empty($_SERVER['SCRIPT_FILENAME']) ? '' : $_SERVER['SCRIPT_FILENAME'];
+$tmp2 = realpath(__FILE__);
+$i = strlen($tmp) - 1;
+$j = strlen($tmp2) - 1;
 while ($i > 0 && $j > 0 && isset($tmp[$i]) && isset($tmp2[$j]) && $tmp[$i] == $tmp2[$j]) {
-	$i--; $j--;
+    $i--;
+    $j--;
 }
-if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1))."/main.inc.php")) {
-	$res = @include substr($tmp, 0, ($i + 1))."/main.inc.php";
+if (!$res && $i > 0 && file_exists(substr($tmp, 0, ($i + 1)) . "/main.inc.php")) {
+    $res = @include substr($tmp, 0, ($i + 1)) . "/main.inc.php";
 }
-if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php")) {
-	$res = @include dirname(substr($tmp, 0, ($i + 1)))."/main.inc.php";
+if (!$res && $i > 0 && file_exists(dirname(substr($tmp, 0, ($i + 1))) . "/main.inc.php")) {
+    $res = @include dirname(substr($tmp, 0, ($i + 1))) . "/main.inc.php";
 }
 // Try main.inc.php using relative path
 if (!$res && file_exists("../../main.inc.php")) {
-	$res = @include "../../main.inc.php";
+    $res = @include "../../main.inc.php";
 }
 if (!$res && file_exists("../../../main.inc.php")) {
-	$res = @include "../../../main.inc.php";
+    $res = @include "../../../main.inc.php";
 }
 if (!$res) {
-	die("Include of main fails");
+    die("Include of main fails");
 }
 
+global $langs, $user;
+
 // Libraries
-require_once DOL_DOCUMENT_ROOT.'/core/lib/admin.lib.php';
-require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
+require_once DOL_DOCUMENT_ROOT . "/core/lib/admin.lib.php";
 require_once '../lib/themeconfig.lib.php';
+//require_once "../class/myclass.class.php";
 
 // Translations
-$langs->loadLangs(array("errors", "admin", "themeconfig@themeconfig"));
+$langs->loadLangs(array("admin", "themeconfig@themeconfig"));
 
 // Access control
 if (!$user->admin) {
@@ -67,22 +73,8 @@ if (!$user->admin) {
 $action = GETPOST('action', 'aZ09');
 $backtopage = GETPOST('backtopage', 'alpha');
 
-
-/*
- * Actions
- */
-
-// None
-
-
-/*
- * View
- */
-
-$form = new Form($db);
-
 $help_url = '';
-$page_name = "ThemeConfigAbout";
+$page_name = "ThemeConfigSetup";
 
 llxHeader('', $langs->trans($page_name), $help_url);
 
@@ -93,13 +85,16 @@ print load_fiche_titre($langs->trans($page_name), $linkback, 'title_setup');
 
 // Configuration header
 $head = themeconfigAdminPrepareHead();
-print dol_get_fiche_head($head, 'about', $langs->trans($page_name), 0, 'themeconfig@themeconfig');
+print dol_get_fiche_head($head, 'settings', $langs->trans($page_name), -1, "themeconfig@themeconfig");
 
-dol_include_once('/themeconfig/core/modules/modThemeConfig.class.php');
-$tmpmodule = new modThemeConfig($db);
-print $tmpmodule->getDescLong();
+// Setup page goes here
+echo '<span class="opacitymedium">'.$langs->trans("ThemeConfigSetupPage").'</span><br><br>';
+
+print '<br>' . $langs->trans("NothingToSetup");
+
 
 // Page end
 print dol_get_fiche_end();
+
 llxFooter();
 $db->close();

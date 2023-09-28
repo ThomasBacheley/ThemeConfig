@@ -1,5 +1,5 @@
 # CHANGELOG THEMECONFIG FOR [DOLIBARR ERP CRM](https://www.dolibarr.org)
 
-## 1.0
+## PMV
 
-Initial version
+Clean Files and add constant and listing them
